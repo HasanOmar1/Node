@@ -24,7 +24,7 @@ function deleteUser(id) {
   const usersToKeep = users.filter((user) => user.id !== id);
   if (users.length > usersToKeep.length) {
     saveUsers(usersToKeep);
-    console.log(chalk.green("User has been removed"));
+    console.log(chalk.green("User has been deleted"));
   } else {
     console.log(chalk.red("User not found"));
   }
