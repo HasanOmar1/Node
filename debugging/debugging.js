@@ -66,7 +66,7 @@ const born = (arr) => {
   });
 };
 
-debugger;
+// debugger;
 const food = (arr) => {
   const obj = {};
 
