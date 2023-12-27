@@ -54,11 +54,6 @@ export function updateMovie(title, newTitle) {
   return findMovie ? { title: newTitle } : false;
 }
 
-// export function listMovies() {
-//   const movies = getMovies();
-//   console.log(movies);
-// }
-
 export function findMovie(movieTitle) {
   const movies = getMovies();
   const findMovie = movies.find((movie) => movie.title === movieTitle);
