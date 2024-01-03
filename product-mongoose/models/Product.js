@@ -40,7 +40,7 @@ const productScheme = new mongoose.Schema({
         validator: function (value) {
           return value && value.length >= 2;
         },
-        message: (props) => "Must include atleast 2 images",
+        message: () => "Must include atleast 2 images",
       },
     },
     phone: {
@@ -50,7 +50,6 @@ const productScheme = new mongoose.Schema({
         validator: function (value) {
           const israeliPhoneNumberRegex =
             /^(?:(?:(\+?972|\(\+?972\)|\+?\(972\))(?:\s|\.|-)?([1-9]\d?))|(0[23489]{1})|(0[57]{1}[0-9]))(?:\s|\.|-)?([^0\D]{1}\d{2}(?:\s|\.|-)?\d{4})$/gm;
-          // /^(\+972|0)([23489]|5[0248]|77)[2-9]\d{6}$/;
           return israeliPhoneNumberRegex.test(value);
         },
         message: (props) =>
