@@ -11,7 +11,7 @@ export const createUser = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find(); // .populate(blogs)
     res.send(users);
   } catch (error) {
     console.error("Error fetching users:", error);
