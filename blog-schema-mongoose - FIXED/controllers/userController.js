@@ -1,9 +1,11 @@
 import User from "../models/User.js";
+import Blog from "../models/blog.js";
 
 export const createUser = async (req, res) => {
   try {
-    const user = await User.create(req.body);
-    res.status(201).send(user);
+    const { name, email } = req.body;
+    const newUser = await User.create({ name, email });
+    res.status(201).send(newUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -11,7 +13,13 @@ export const createUser = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find(); // .populate(blogs)
+    const users = await User.find().populate({
+      path: "blogs",
+      populate: {
+        path: "comments",
+        model: "Comment",
+      },
+    });
     res.send(users);
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -22,7 +30,14 @@ export const getAllUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
+
+    const user = await User.findById(id).populate({
+      path: "blogs",
+      populate: {
+        path: "comments",
+        model: "Comment",
+      },
+    });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -54,5 +69,14 @@ export const deleteUser = async (req, res) => {
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const deleteAllUsers = async (req, res, next) => {
+  try {
+    const users = await User.deleteMany({});
+    res.send(users);
+  } catch (error) {
+    next(error);
   }
 };

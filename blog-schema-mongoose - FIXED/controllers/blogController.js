@@ -3,7 +3,7 @@ import Blog from "../models/blog.js";
 
 export const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find();
+    const blogs = await Blog.find().populate("user").populate("comments");
     res.status(200).send(blogs);
   } catch (error) {
     console.error("Error fetching blogs", error);
@@ -14,7 +14,7 @@ export const getAllBlogs = async (req, res) => {
 export const getBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const blog = await Blog.findById(id);
+    const blog = await Blog.findById(id).populate("user").populate("comments");
     res.send(blog);
   } catch (error) {
     console.error("Error fetching blogs", error);
@@ -27,16 +27,14 @@ export const createBlog = async (req, res) => {
     const { title, user, body } = req.body;
     // const blog = await Blog.create(req.body);
     const blog = new Blog({ title, user, body });
-    const myUser = await User.findById(user);
-
     await blog.save();
     await User.findByIdAndUpdate(
       user,
       { $push: { blogs: blog._id } },
       { new: true }
-    );
-    const test = [blog, myUser];
-    res.status(201).send(test);
+    ).populate("blogs");
+
+    res.status(201).send(blog);
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
@@ -63,5 +61,14 @@ export const deleteBlog = async (req, res) => {
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).send({ error: "Internal Server Error" });
+  }
+};
+
+export const deleteAllBlogs = async (req, res, next) => {
+  try {
+    const blogs = await Blog.deleteMany({});
+    res.send(blogs);
+  } catch (error) {
+    next(error);
   }
 };
